@@ -1,0 +1,11 @@
+services:
+  mongodb:
+    image: 'mongo:latest'
+    environment:
+      - 'MONGO_INITDB_DATABASE=mydatabase'
+      - 'MONGO_INITDB_ROOT_PASSWORD=secret'
+      - 'MONGO_INITDB_ROOT_USERNAME=root'
+    volumes:
+        - 'mongodb:/data/db'
+    ports:
+      - '127.0.0.1:27017:27017'
