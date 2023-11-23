@@ -4,7 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import pl.prusinowsky.timesheet.project.entity.ProjectEntity
+import pl.prusinowsky.timesheet.project.model.ProjectCreate
+import pl.prusinowsky.timesheet.project.model.ProjectResponse
+import pl.prusinowsky.timesheet.project.model.ProjectUpdate
+import pl.prusinowsky.timesheet.project.model.toResponse
 import pl.prusinowsky.timesheet.project.service.ProjectService
 
 @RestController
@@ -13,32 +16,36 @@ class ProjectController @Autowired constructor(
     private val projectService: ProjectService
 ) {
     @GetMapping
-    fun getAllProjects(): ResponseEntity<List<ProjectEntity>> {
+    fun getAllProjects(): ResponseEntity<List<ProjectResponse>> {
         val projects = projectService.getAllProjects()
-        return ResponseEntity(projects, HttpStatus.OK)
+
+        return ResponseEntity(projects.map { it.toResponse() }, HttpStatus.OK)
     }
 
     @GetMapping("/{id}")
-    fun getProjectById(@PathVariable id: String): ResponseEntity<ProjectEntity> {
+    fun getProjectById(@PathVariable id: String): ResponseEntity<ProjectResponse> {
         val project = projectService.getProjectById(id)
+
         return if (project != null) {
-            ResponseEntity(project, HttpStatus.OK)
+            ResponseEntity(project.toResponse(), HttpStatus.OK)
         } else {
             ResponseEntity(HttpStatus.NOT_FOUND)
         }
     }
 
     @PostMapping
-    fun createProject(@RequestBody project: ProjectEntity): ResponseEntity<ProjectEntity> {
+    fun createProject(@RequestBody project: ProjectCreate): ResponseEntity<ProjectResponse> {
         val createdProject = projectService.createProject(project)
-        return ResponseEntity(createdProject, HttpStatus.CREATED)
+
+        return ResponseEntity(createdProject.toResponse(), HttpStatus.CREATED)
     }
 
     @PutMapping("/{id}")
-    fun updateProject(@PathVariable id: String, @RequestBody updatedProject: ProjectEntity): ResponseEntity<ProjectEntity> {
-        val project = projectService.updateProject(id, updatedProject)
+    fun updateProject(@PathVariable id: String, @RequestBody projectData: ProjectUpdate): ResponseEntity<ProjectResponse> {
+        val project = projectService.updateProject(id, projectData)
+
         return if (project != null) {
-            ResponseEntity(project, HttpStatus.OK)
+            ResponseEntity(project.toResponse(), HttpStatus.OK)
         } else {
             ResponseEntity(HttpStatus.NOT_FOUND)
         }
