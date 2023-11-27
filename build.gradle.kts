@@ -26,17 +26,17 @@ repositories {
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
-    implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.springframework.modulith:spring-modulith-starter-core")
     implementation("org.springframework.modulith:spring-modulith-starter-mongodb")
-    developmentOnly("org.springframework.boot:spring-boot-docker-compose")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.modulith:spring-modulith-starter-test")
-    testImplementation("org.springframework.security:spring-security-test")
+    developmentOnly("org.springframework.boot:spring-boot-docker-compose")
+//    implementation("org.springframework.boot:spring-boot-starter-security")
+//    testImplementation("org.springframework.security:spring-security-test")
 }
 
 dependencyManagement {
