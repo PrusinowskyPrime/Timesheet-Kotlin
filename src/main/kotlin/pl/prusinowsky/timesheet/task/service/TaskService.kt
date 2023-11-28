@@ -26,9 +26,8 @@ class TaskService @Autowired constructor(
     fun updateTask(id: String, updatedTask: UpdateTask): TaskEntity? {
         val existingTask = taskRepository.findById(id)
 
-        if (!existingTask.isPresent) {
-            return null;
-        }
+        if (!existingTask.isPresent)
+            return null
 
         val task = existingTask.get()
 
