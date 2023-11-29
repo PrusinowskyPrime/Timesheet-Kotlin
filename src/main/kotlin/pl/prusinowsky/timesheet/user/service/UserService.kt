@@ -11,46 +11,40 @@ import pl.prusinowsky.timesheet.user.repository.UserRepository
 class UserService @Autowired constructor(
     private val userRepository: UserRepository
 ) {
-    fun getAllUsers(): List<UserEntity> {
-        return userRepository.findAll()
-    }
+    fun getAll(): List<UserEntity> = userRepository.findAll()
 
-    fun getUserById(id: String): UserEntity? {
-        return userRepository.findById(id).orElse(null)
-    }
+    fun getById(id: String): UserEntity? = userRepository.findById(id).orElse(null)
 
-    fun createUser(user: CreateUser): UserEntity {
-        val entity = UserEntity(
-            name = user.name,
-            surname = user.surname,
-            email = user.email,
-            password = user.password
+    fun create(data: CreateUser): UserEntity {
+        val user = UserEntity(
+            name = data.name,
+            surname = data.surname,
+            email = data.email,
+            password = data.password
         )
 
-        return userRepository.save(entity)
+        return userRepository.save(user)
     }
 
-    fun updateUser(id: String, updateData: UpdateUser): UserEntity? {
+    fun update(id: String, updateData: UpdateUser): UserEntity? {
         val existingUser = userRepository.findById(id)
 
-        if (existingUser.isPresent) {
-            val user = existingUser.get()
-
-            return userRepository.save(
-                UserEntity(
-                    id = user.id,
-                    name = updateData.name,
-                    surname = updateData.surname,
-                    email = updateData.email,
-                    password = user.password
-                )
-            )
+        if (!existingUser.isPresent) {
+            return null
         }
 
-        return null
+        val user = existingUser.get()
+
+        return userRepository.save(
+            UserEntity(
+                id = user.id,
+                name = updateData.name,
+                surname = updateData.surname,
+                email = updateData.email,
+                password = user.password
+            )
+        )
     }
 
-    fun deleteUser(id: String) {
-        userRepository.deleteById(id)
-    }
+    fun delete(id: String): Unit = userRepository.deleteById(id)
 }
