@@ -53,7 +53,7 @@ class ProjectController @Autowired constructor(
 
     @DeleteMapping("/{id}")
     fun deleteProject(@PathVariable id: String): ResponseEntity<Void> {
-        projectService.deleteProject(id)
+        projectService.delete(id)
         return ResponseEntity(HttpStatus.NO_CONTENT)
     }
 }

@@ -42,5 +42,5 @@ class ProjectService @Autowired constructor(
         )
     }
 
-    fun deleteProject(id: String): Unit = projectRepository.deleteById(id)
+    fun delete(id: String): Unit = projectRepository.deleteById(id)
 }
