@@ -11,35 +11,34 @@ import pl.prusinowsky.timesheet.task.model.UpdateTask
 class TaskService @Autowired constructor(
     private val taskRepository: TaskRepository
 ) {
-    fun getAllTasks(): List<TaskEntity> = taskRepository.findAll()
+    fun getAll(): List<TaskEntity> = taskRepository.findAll()
 
-    fun getTaskById(id: String): TaskEntity? = taskRepository.findById(id).orElse(null)
+    fun getById(id: String): TaskEntity? = taskRepository.findById(id).orElse(null)
 
-    fun createTask(taskData: CreateTask): TaskEntity {
+    fun create(data: CreateTask): TaskEntity {
         val task = TaskEntity(
-            name = taskData.name, description = taskData.description, isActive = taskData.isActive
+            name = data.name, description = data.description, isActive = data.isActive
         )
 
         return taskRepository.save(task)
     }
 
-    fun updateTask(id: String, updatedTask: UpdateTask): TaskEntity? {
+    fun update(id: String, data: UpdateTask): TaskEntity? {
         val existingTask = taskRepository.findById(id)
 
-        if (!existingTask.isPresent)
-            return null
+        if (!existingTask.isPresent) return null
 
         val task = existingTask.get()
 
         return taskRepository.save(
             TaskEntity(
                 id = task.id,
-                name = updatedTask.name,
-                description = updatedTask.description,
-                isActive = updatedTask.isActive
+                name = data.name,
+                description = data.description,
+                isActive = data.isActive
             )
         )
     }
 
-    fun deleteTask(id: String): Unit = taskRepository.deleteById(id)
+    fun delete(id: String): Unit = taskRepository.deleteById(id)
 }

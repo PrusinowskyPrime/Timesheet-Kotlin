@@ -17,14 +17,14 @@ class TaskController @Autowired constructor(
 ) {
     @GetMapping
     fun getAllTasks(): ResponseEntity<List<TaskResponse>> {
-        val tasks = taskService.getAllTasks()
+        val tasks = taskService.getAll()
 
         return ResponseEntity(tasks.map { it.toResponse() }, HttpStatus.OK)
     }
 
     @GetMapping("/{id}")
     fun getTaskById(@PathVariable id: String): ResponseEntity<TaskResponse> {
-        val task = taskService.getTaskById(id)
+        val task = taskService.getById(id)
 
         return if (task != null) {
             ResponseEntity(task.toResponse(), HttpStatus.OK)
@@ -35,14 +35,14 @@ class TaskController @Autowired constructor(
 
     @PostMapping
     fun createTask(@RequestBody task: CreateTask): ResponseEntity<TaskResponse> {
-        val createdTask = taskService.createTask(task)
+        val createdTask = taskService.create(task)
 
         return ResponseEntity(createdTask.toResponse(), HttpStatus.CREATED)
     }
 
     @PutMapping("/{id}")
     fun updateTask(@PathVariable id: String, @RequestBody taskUpdate: UpdateTask): ResponseEntity<TaskResponse> {
-        val task = taskService.updateTask(id, taskUpdate)
+        val task = taskService.update(id, taskUpdate)
 
         return if (task != null) {
             ResponseEntity(task.toResponse(), HttpStatus.OK)
@@ -53,7 +53,7 @@ class TaskController @Autowired constructor(
 
     @DeleteMapping("/{id}")
     fun deleteTask(@PathVariable id: String): ResponseEntity<Void> {
-        taskService.deleteTask(id)
+        taskService.delete(id)
 
         return ResponseEntity(HttpStatus.NO_CONTENT)
     }
