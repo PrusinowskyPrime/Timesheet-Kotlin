@@ -11,42 +11,36 @@ import pl.prusinowsky.timesheet.project.repository.ProjectRepository
 class ProjectService @Autowired constructor(
     private val projectRepository: ProjectRepository
 ) {
-    fun getAllProjects(): List<ProjectEntity> {
-        return projectRepository.findAll()
-    }
+    fun getAll(): List<ProjectEntity> = projectRepository.findAll()
 
-    fun getProjectById(id: String): ProjectEntity? {
-        return projectRepository.findById(id).orElse(null)
-    }
+    fun getById(id: String): ProjectEntity? = projectRepository.findById(id).orElse(null)
 
-    fun createProject(projectData: ProjectCreate): ProjectEntity {
+    fun create(data: ProjectCreate): ProjectEntity {
         val project = ProjectEntity(
-            name = projectData.name,
-            description = projectData.description
+            name = data.name,
+            description = data.description
         )
 
         return projectRepository.save(project)
     }
 
-    fun updateProject(id: String, updatedProject: ProjectUpdate): ProjectEntity? {
+    fun update(id: String, updateData: ProjectUpdate): ProjectEntity? {
         val existingProject = projectRepository.findById(id)
 
-        if (existingProject.isPresent) {
-            val project = existingProject.get()
-
-            return projectRepository.save(
-                ProjectEntity(
-                    id = project.id,
-                    name = updatedProject.name,
-                    description = updatedProject.description
-                )
-            )
+        if (!existingProject.isPresent) {
+            return null
         }
 
-        return null
+        val project = existingProject.get()
+
+        return projectRepository.save(
+            ProjectEntity(
+                id = project.id,
+                name = updateData.name,
+                description = updateData.description
+            )
+        )
     }
 
-    fun deleteProject(id: String) {
-        projectRepository.deleteById(id)
-    }
+    fun delete(id: String): Unit = projectRepository.deleteById(id)
 }
