@@ -17,14 +17,14 @@ class ProjectController @Autowired constructor(
 ) {
     @GetMapping
     fun getAllProjects(): ResponseEntity<List<ProjectResponse>> {
-        val projects = projectService.getAllProjects()
+        val projects = projectService.getAll()
 
         return ResponseEntity(projects.map { it.toResponse() }, HttpStatus.OK)
     }
 
     @GetMapping("/{id}")
     fun getProjectById(@PathVariable id: String): ResponseEntity<ProjectResponse> {
-        val project = projectService.getProjectById(id)
+        val project = projectService.getById(id)
 
         return if (project != null) {
             ResponseEntity(project.toResponse(), HttpStatus.OK)
@@ -35,14 +35,14 @@ class ProjectController @Autowired constructor(
 
     @PostMapping
     fun createProject(@RequestBody project: ProjectCreate): ResponseEntity<ProjectResponse> {
-        val createdProject = projectService.createProject(project)
+        val createdProject = projectService.create(project)
 
         return ResponseEntity(createdProject.toResponse(), HttpStatus.CREATED)
     }
 
     @PutMapping("/{id}")
     fun updateProject(@PathVariable id: String, @RequestBody projectData: ProjectUpdate): ResponseEntity<ProjectResponse> {
-        val project = projectService.updateProject(id, projectData)
+        val project = projectService.update(id, projectData)
 
         return if (project != null) {
             ResponseEntity(project.toResponse(), HttpStatus.OK)
