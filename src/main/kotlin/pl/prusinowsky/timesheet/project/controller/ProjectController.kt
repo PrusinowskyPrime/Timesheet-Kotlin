@@ -9,11 +9,19 @@ import pl.prusinowsky.timesheet.project.model.ProjectResponse
 import pl.prusinowsky.timesheet.project.model.ProjectUpdate
 import pl.prusinowsky.timesheet.project.model.toResponse
 import pl.prusinowsky.timesheet.project.service.ProjectService
+import pl.prusinowsky.timesheet.request.model.CreateRequest
+import pl.prusinowsky.timesheet.request.model.RequestResponse
+import pl.prusinowsky.timesheet.request.model.toResponse
+import pl.prusinowsky.timesheet.request.service.RequestService
+import pl.prusinowsky.timesheet.user.entity.UserEntity
+import pl.prusinowsky.timesheet.user.service.UserService
 
 @RestController
 @RequestMapping("/api/v1/projects")
 class ProjectController @Autowired constructor(
-    private val projectService: ProjectService
+    private val projectService: ProjectService,
+    private val requestService: RequestService,
+    private val userService: UserService,
 ) {
     @GetMapping
     fun getAllProjects(): ResponseEntity<List<ProjectResponse>> {
@@ -38,6 +46,25 @@ class ProjectController @Autowired constructor(
         val createdProject = projectService.create(project)
 
         return ResponseEntity(createdProject.toResponse(), HttpStatus.CREATED)
+    }
+
+    @PostMapping("/{projectId}/requests")
+    fun createJoinRequest(
+        @PathVariable projectId: String,
+        @RequestBody request: CreateRequest
+    ): ResponseEntity<RequestResponse> {
+        val project = projectService.getById(projectId)
+            ?: return ResponseEntity(HttpStatus.NOT_FOUND)
+
+        val sender: UserEntity = userService.getById(request.senderId)
+            ?: return ResponseEntity(HttpStatus.NOT_FOUND)
+
+        val receiver: UserEntity = userService.getById(request.receiverId)
+            ?: return ResponseEntity(HttpStatus.NOT_FOUND)
+
+        val createdRequest = requestService.create(project, sender, receiver)
+
+        return ResponseEntity(createdRequest.toResponse(), HttpStatus.CREATED)
     }
 
     @PutMapping("/{id}")
