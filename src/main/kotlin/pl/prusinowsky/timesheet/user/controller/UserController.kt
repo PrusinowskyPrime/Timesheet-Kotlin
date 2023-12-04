@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import pl.prusinowsky.timesheet.user.model.CreateUser
 import pl.prusinowsky.timesheet.user.model.UpdateUser
 import pl.prusinowsky.timesheet.user.model.UserResponse
 import pl.prusinowsky.timesheet.user.model.toResponse
@@ -31,13 +30,6 @@ class UserController @Autowired constructor(
         } else {
             ResponseEntity(HttpStatus.NOT_FOUND)
         }
-    }
-
-    @PostMapping
-    fun createUser(@RequestBody user: CreateUser): ResponseEntity<UserResponse> {
-        val createdUser = userService.create(user)
-
-        return ResponseEntity(createdUser.toResponse(), HttpStatus.CREATED)
     }
 
     @PutMapping("/{id}")

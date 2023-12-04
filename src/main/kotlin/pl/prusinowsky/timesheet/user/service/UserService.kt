@@ -2,25 +2,29 @@ package pl.prusinowsky.timesheet.user.service
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import pl.prusinowsky.timesheet.auth.service.HashService
 import pl.prusinowsky.timesheet.user.entity.UserEntity
-import pl.prusinowsky.timesheet.user.model.CreateUser
+import pl.prusinowsky.timesheet.auth.model.RegisterUser
 import pl.prusinowsky.timesheet.user.model.UpdateUser
 import pl.prusinowsky.timesheet.user.repository.UserRepository
 
 @Service
 class UserService @Autowired constructor(
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val hashService: HashService
 ) {
     fun getAll(): List<UserEntity> = userRepository.findAll()
 
     fun getById(id: String): UserEntity? = userRepository.findById(id).orElse(null)
 
-    fun create(data: CreateUser): UserEntity {
+    fun getByEmail(email: String): UserEntity? = userRepository.findByEmail(email).orElse(null)
+
+    fun create(data: RegisterUser): UserEntity {
         val user = UserEntity(
             name = data.name,
             surname = data.surname,
             email = data.email,
-            password = data.password
+            password = hashService.hashBcrypt(data.password)
         )
 
         return userRepository.save(user)
