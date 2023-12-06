@@ -1,6 +1,6 @@
-package pl.prusinowsky.timesheet.user.model
+package pl.prusinowsky.timesheet.auth.model
 
-data class CreateUser(
+data class RegisterUser(
     val name: String,
     val surname: String,
     val email: String,
