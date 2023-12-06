@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import pl.prusinowsky.timesheet.auth.exceptions.LoginFailed
+import pl.prusinowsky.timesheet.auth.exceptions.BadCredentials
 import pl.prusinowsky.timesheet.auth.exceptions.UserAlreadyExists
 import pl.prusinowsky.timesheet.auth.model.LoginData
 import pl.prusinowsky.timesheet.auth.model.LoginResponse
@@ -31,7 +31,7 @@ class AuthController @Autowired constructor(
         val user = userService.getByEmail(payload.email) ?: throw UserAlreadyExists()
 
         if (!hashService.checkBcrypt(payload.password, user.password)) {
-            throw LoginFailed()
+            throw BadCredentials()
         }
 
         return ResponseEntity(

@@ -12,21 +12,15 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder
 import javax.crypto.spec.SecretKeySpec
 
 @Configuration
-class JwtConfig(
+class JwtConfiguration(
     @Value("\${security.key}")
     private val jwtKey: String,
 ) {
     private val secretKey = SecretKeySpec(jwtKey.toByteArray(), "HmacSHA256")
 
     @Bean
-    fun jwtDecoder(): JwtDecoder {
-        return NimbusJwtDecoder.withSecretKey(secretKey).build()
-    }
+    fun jwtDecoder(): JwtDecoder = NimbusJwtDecoder.withSecretKey(secretKey).build()
 
     @Bean
-    fun jwtEncoder(): JwtEncoder {
-        val secret = ImmutableSecret<SecurityContext>(secretKey)
-
-        return NimbusJwtEncoder(secret)
-    }
+    fun jwtEncoder(): JwtEncoder = NimbusJwtEncoder(ImmutableSecret<SecurityContext>(secretKey))
 }
